@@ -15,7 +15,7 @@ my_date_format = "%b %d, %Y"
 def scrape_youtube_videos(channel_name, n_videos):
     try:
         chrome_options = Options()
-        chrome_options.set_headless(headless = True)
+        chrome_options.add_argument("--headless=new")
         driver = webdriver.Chrome(service=Service(CHROME_DRIVER_PATH), options=chrome_options)
         url_to_channel = f"https://www.youtube.com/{channel_name}/videos"
         driver.get(url_to_channel)
