@@ -7,13 +7,17 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from datetime import datetime
 from selenium.webdriver.chrome.options import Options
+from flask import request
 app = Flask(__name__)
 
 CHROME_DRIVER_PATH = "./chromedriver.exe"
 my_date_format = "%b %d, %Y"
-@app.route(f'/scrape_youtube_videos/<string:channel_name>/<int:n_videos>', methods=['GET', 'POST'])
-def scrape_youtube_videos(channel_name, n_videos):
+@app.route('/', methods=['GET', 'POST'])
+def scrape_youtube_videos():
+    driver =None
     try:
+        channel_name = str(request.args.get('channel_name'))
+        n_videos = int(request.args.get('n_videos'))
         chrome_options = Options()
         chrome_options.add_argument("--headless=new")
         driver = webdriver.Chrome(service=Service(CHROME_DRIVER_PATH), options=chrome_options)
@@ -22,7 +26,7 @@ def scrape_youtube_videos(channel_name, n_videos):
 
         scroll_position = 0
         scroll_increment = 2000
-        num_scrolls = 10
+        num_scrolls = (n_videos -1)//20 +1
         for _ in range(num_scrolls):
             scroll_position += scroll_increment
             driver.execute_script(f"window.scrollTo(0, {scroll_position});")
